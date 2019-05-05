@@ -1,30 +1,25 @@
-pipeline {
-    agent {
-        docker {
-            image 'maven:3-alpine'
-            args '-v /root/.m2:/root/.m2'
-        }
+node{
+    stage('get clone'){
+        //check CODE
+       git credentialsId: '56e1a242-7858-4729-a107-2808382cf9c1', url: 'https://github.com/shuyan2012/HelloWorld.git'
     }
-    stages {
-        stage('Build') {
-            steps {
-                sh 'mvn -B -DskipTests clean package'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
-            }
-        }
-        stage('Deliver') { 
-            steps {
-                sh './jenkins/scripts/deliver.sh' 
-            }
-        }
+
+    //定义mvn环境
+    def mvnHome = tool 'M3'
+    env.PATH = "${mvnHome}/bin:${env.PATH}"
+
+    stage('mvn test'){
+        //mvn 测试
+        sh "mvn test"
+    }
+
+    stage('mvn build'){
+        //mvn构建
+        sh "mvn clean install -Dmaven.test.skip=true"
+    }
+
+    stage('deploy'){
+        //执行部署脚本
+        echo 'deploy finished'
     }
 }
