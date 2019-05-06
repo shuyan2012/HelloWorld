@@ -1,4 +1,6 @@
 #!/bin/bash
+#授予权限
+su -
 #集群IP列表，多个用空格分开
 #NODE_LIST="192.168.161.118 192.168.161.117"
 NODE_LIST="localhost"
