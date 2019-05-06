@@ -7,6 +7,7 @@ node{
     //定义mvn环境
     def mvnHome = tool 'M3'
     env.PATH = "${mvnHome}/bin:${env.PATH}"
+	def workspace = pwd()
 
     stage('mvn test'){
         //mvn 测试
@@ -20,6 +21,6 @@ node{
 
     stage('deploy'){
         //执行部署脚本
-        echo 'deploy finished'
+        sh "'/scripts/deploy.sh' ${workspace} deploy"
     }
 }
