@@ -21,6 +21,6 @@ node{
 
     stage('deploy'){
         //Ö´ÐÐ²¿Êð½Å±¾
-        sh "sudo '/scripts/deploy.sh' ${workspace} deploy"
+        sh "'sudo /scripts/deploy.sh' ${workspace} deploy"
     }
 }
