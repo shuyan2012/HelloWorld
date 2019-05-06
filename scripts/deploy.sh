@@ -1,6 +1,5 @@
-#!/bin/bash
+#!/bin/sh
 #授予权限
-su -
 #集群IP列表，多个用空格分开
 #NODE_LIST="192.168.161.118 192.168.161.117"
 NODE_LIST="localhost"
@@ -60,7 +59,7 @@ scp_jar(){
     SOURCE_DIR=${JAR_DIR}/${CDATE}${CTIME}
     write_log "Scp jar file to remote machine..."
     for node in $NODE_LIST;do
-      scp -r ${SOURCE_DIR}/* $node:${REMOTE_DIR}
+      scp -r ${SOURCE_DIR}/* ${REMOTE_DIR}
       write_log "Scp to ${node} complete."
     done
 } 
