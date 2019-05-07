@@ -68,11 +68,11 @@ cluster_node_remove(){
     write_log "Kill all runing project on the cluster..."
     for project in $NEED_DEPLOY_PROJECT;do
       for node in $NODE_LIST;do
-        pid=$(ps aux|grep ${project}|grep -v grep|awk '{print $2}'|awk '{print $2}')
+        pid=$(ssh $node "ps aux|grep ${project}|grep -v grep|awk '{print $2}'"|awk '{print $2}')
         if [ ! -n "$pid" ]; then  
       write_log "${project} is not runing..."
     else  
-          kill -9 $pid
+          ssh $node "kill -9 $pid"
       write_log "Killed ${project} at ${node}..."
     fi  
       done
@@ -83,7 +83,7 @@ cluster_deploy(){
     write_log "Up all project on the cluster..."
     for project in $NEED_DEPLOY_PROJECT;do
       for node in $NODE_LIST;do
-         cd ${REMOTE_DIR}/${project};nohup java -jar ${project}*.jar >/dev/null 2>&1 & 
+        ssh $node "cd ${REMOTE_DIR}/${project};nohup java -jar ${project}*.jar >/dev/null 2>&1 &" 
     write_log "Up ${project} on $node complete..."
       done
     done
@@ -94,6 +94,9 @@ rollback(){
 } 
 #入口
 main(){
+    if [ -f ${LOCK_FILE} ];then
+        write_log "Deploy is running"  && exit;
+    fi
     WORKSPACE=$1
     DEPLOY_METHOD=$2
     init;
