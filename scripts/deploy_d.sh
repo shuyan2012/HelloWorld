@@ -27,6 +27,7 @@ API_VERSION="0.0.1"
 API_PORT=58080
 IMAGE_NAME="127.0.0.1:5000/$API_NAME:$API_VERSION"
 CONTAINER_NAME=$API_NAME-$API_VERSION
+D_DIR=${JAR_DIR}/${CDATE}${CTIME}/${NEED_DEPLOY_PROJECT}
 
 usage(){
     echo  $"Usage: $0 [projectJarPath] [ deploy | rollback ]"
@@ -63,24 +64,23 @@ copy_jar() {
 }
 
 #copy Dockerfile
-copy_df(){
+copy_df(){	
 	write_log "copy Dockerfile..."
 	cd $1
-	cp Dockerfile .
+	cp Dockerfile ${D_DIR}/
 	write_log "copy Dockerfile complete."
 }
 
 #build image
 build_im(){
-    SOURCE_DIR=${JAR_DIR}/${CDATE}${CTIME}
     write_log "bulid image..."
+	cd ${D_DIR}
 	docker build -t $IMAGE_NAME .
     write_log "bulid image complete."	
 }
 
 #push image
 push_im(){
-    SOURCE_DIR=${JAR_DIR}/${CDATE}${CTIME}
     write_log "push image..."
 	docker push $IMAGE_NAME
     write_log "push image complete."	
@@ -98,7 +98,6 @@ rm_con(){
 
 #pull image
 pull_im(){
-    SOURCE_DIR=${JAR_DIR}/${CDATE}${CTIME}
     write_log "pull image..."
 	docker pull $IMAGE_NAME
     write_log "pull image complete."	
@@ -106,7 +105,6 @@ pull_im(){
 
 #start container
 start_con(){
-    SOURCE_DIR=${JAR_DIR}/${CDATE}${CTIME}
     write_log "start container..."
 	docker run -d -p $API_PORT:8080 --name $CONTAINER_NAME $IMAGE_NAME
     write_log "start container complete."	
