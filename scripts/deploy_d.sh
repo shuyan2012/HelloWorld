@@ -65,7 +65,7 @@ copy_jar() {
 
 #copy Dockerfile
 copy_df(){	
-	write_log "copy Dockerfile..."
+	write_log "copy Dockerfile to ${D_DIR}"
 	cd $1
 	cp Dockerfile ${D_DIR}/
 	write_log "copy Dockerfile complete."
